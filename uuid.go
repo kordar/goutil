@@ -7,17 +7,14 @@ import (
 	"time"
 )
 
-// UUID 生成
-var uuid4 = uuid.New()
-var uuid1, uuid1err = uuid.NewUUID()
-
 // UUID V4 基于随机数
 func UUID() string {
-	return uuid4.String()
+	return uuid.New().String()
 }
 
 // UUIDTime V1 基于时间
 func UUIDTime() string {
+	uuid1, uuid1err := uuid.NewUUID()
 	if uuid1err != nil {
 		return UUID()
 	}
