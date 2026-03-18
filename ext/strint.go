@@ -2,6 +2,7 @@ package ext
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 )
 
@@ -21,6 +22,9 @@ func (st *StrInt) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	switch v := item.(type) {
+	case nil:
+		*st = 0
+		return nil
 	case int:
 		*st = StrInt(v)
 	case float64:
@@ -41,6 +45,8 @@ func (st *StrInt) UnmarshalJSON(b []byte) error {
 		}
 		*st = StrInt(i)
 
+	default:
+		return fmt.Errorf("unsupported type: %T", v)
 	}
 	return nil
 }

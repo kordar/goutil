@@ -6,19 +6,27 @@ import (
 )
 
 var cfg = viper.New()
-var errCfg error
 
 func ConfigInit(filepath string) {
-	ConfigInit2(filepath, "ini")
+	if err := ConfigInitE(filepath); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func ConfigInit2(filepath string, in string) {
+	if err := ConfigInit2E(filepath, in); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func ConfigInitE(filepath string) error {
+	return ConfigInit2E(filepath, "ini")
+}
+
+func ConfigInit2E(filepath string, in string) error {
 	cfg.SetConfigFile(filepath)
 	cfg.SetConfigType(in)
-	errCfg = cfg.ReadInConfig()
-	if errCfg != nil {
-		log.Fatal(errCfg)
-	}
+	return cfg.ReadInConfig()
 }
 
 func GetSystemValue(key string) string {
