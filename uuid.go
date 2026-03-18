@@ -9,16 +9,16 @@ import (
 
 // UUID V4 基于随机数
 func UUID() string {
-	return uuid.New().String()
+	return uuid.NewString()
 }
 
 // UUIDTime V1 基于时间
 func UUIDTime() string {
-	uuid1, uuid1err := uuid.NewUUID()
-	if uuid1err != nil {
+	u, err := uuid.NewUUID()
+	if err != nil {
 		return UUID()
 	}
-	return uuid1.String()
+	return u.String()
 }
 
 // TODO 雪花ID生成，需初始化 InitSnowFlakeNode
@@ -29,15 +29,13 @@ func InitSnowFlakeNode(startdate string, machineID int64) (err error) {
 	// 格式化1月2号下午3时4分5秒2006年
 	st, err = time.Parse("2006-01-02", startdate)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return fmt.Errorf("parse startdate: %w", err)
 	}
 
 	snowflake.Epoch = st.UnixNano() / 1e6
 	node, err = snowflake.NewNode(machineID)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return fmt.Errorf("new snowflake node: %w", err)
 	}
 
 	return
@@ -45,5 +43,13 @@ func InitSnowFlakeNode(startdate string, machineID int64) (err error) {
 
 // GetSnowFlakeId 生成64位的雪花ID
 func GetSnowFlakeId() int64 {
-	return node.Generate().Int64()
+	id, _ := GetSnowFlakeIdE()
+	return id
+}
+
+func GetSnowFlakeIdE() (int64, error) {
+	if node == nil {
+		return 0, fmt.Errorf("snowflake node not initialized")
+	}
+	return node.Generate().Int64(), nil
 }

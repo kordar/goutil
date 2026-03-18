@@ -13,9 +13,9 @@ func SHA1(s string) string {
 	return hex.EncodeToString(o.Sum(nil))
 }
 
-func SHA1B(bytes []byte) string {
+func SHA1B(b []byte) string {
 	o := sha1.New()
-	o.Write(bytes)
+	o.Write(b)
 	return hex.EncodeToString(o.Sum(nil))
 }
 
@@ -25,9 +25,9 @@ func Md5V(str string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func Md5B(bytes []byte) string {
+func Md5B(b []byte) string {
 	h := md5.New()
-	h.Write(bytes)
+	h.Write(b)
 	return hex.EncodeToString(h.Sum(nil))
 }
 
